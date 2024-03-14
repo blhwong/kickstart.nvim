@@ -543,7 +543,7 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        -- gopls = {},
+        gopls = {},
         pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -618,6 +618,7 @@ require('lazy').setup({
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
         -- javascript = { { "prettierd", "prettier" } },
+        go = { 'goimports', 'gofmt' },
       },
     },
   },
@@ -773,6 +774,8 @@ require('lazy').setup({
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
       require('mini.tabline').setup()
+
+      require('mini.pairs').setup()
     end,
   },
 
@@ -821,6 +824,31 @@ require('lazy').setup({
         dotfiles = true,
       },
     },
+  },
+
+  {
+    'ray-x/go.nvim',
+    dependencies = { -- optional packages
+      'ray-x/guihua.lua',
+      'neovim/nvim-lspconfig',
+      'nvim-treesitter/nvim-treesitter',
+    },
+    config = function()
+      require('go').setup()
+
+      -- -- Run gofmt + goimport on save
+      -- local format_sync_grp = vim.api.nvim_create_augroup('GoImport', {})
+      -- vim.api.nvim_create_autocmd('BufWritePre', {
+      --   pattern = '*.go',
+      --   callback = function()
+      --     require('go.format').goimport()
+      --   end,
+      --   group = format_sync_grp,
+      -- })
+    end,
+    event = { 'CmdlineEnter' },
+    ft = { 'go', 'gomod' },
+    build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
   },
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
